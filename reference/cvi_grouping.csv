@@ -1,0 +1,8 @@
+object,account_group,bp_grouping,number_range,note
+customer,KUNA,BP01,same,Inland customers
+customer,KUNE,BP01,same,EU customers
+customer,KUND,BP02,same,Non-EU customers
+customer,OEFF,BP03,same,Public sector
+vendor,KRED,BP04,same,Domestic vendors
+vendor,KREE,BP04,same,Foreign vendors
+vendor,CPDL,BP05,internal,One-time vendors

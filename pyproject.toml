@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "stammdaten-check"
+version = "0.3.0"
+description = "Master data readiness checks for an SAP ECC to S/4HANA move"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Abdallah Aneed" }]
+dependencies = [
+    "pandas>=2.0",
+    "openpyxl>=3.1",
+    "rapidfuzz>=3.0",
+    "faker>=20.0",
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "httpx>=0.27"]
+
+[project.scripts]
+stammdaten-check = "stammdaten_check.cli:main"
+
+[tool.setuptools]
+packages = ["stammdaten_check", "stammdaten_check.rules", "stammdaten_check.web"]
+
+[tool.setuptools.package-data]
+"stammdaten_check.web" = ["static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

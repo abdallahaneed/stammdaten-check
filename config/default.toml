@@ -1,0 +1,30 @@
+# Settings for one check run. Copy this file and pass it with --config.
+
+[run]
+# brownfield = system conversion (ECC -> S/4HANA in place, CVI needed)
+# greenfield = new implementation (load via Migration Cockpit)
+# both = run every rule
+path = "both"
+cutover_date = "2026-12-31"
+
+[duplicates]
+# Scores are 0-100. See docs/decisions.md for why these values.
+match_threshold = 90
+review_threshold = 80
+
+[inactive]
+years_without_posting = 3
+
+[deletion_flag]
+recent_activity_months = 12
+
+[einvoice]
+# Account groups that are public sector customers and need a Leitweg-ID
+public_sector_groups = ["OEFF"]
+
+[materials]
+required_languages = ["D", "E"]
+
+[cvi]
+# Strategy when customer and vendor become one BP: "same" number or "internal"
+number_strategy = "same"

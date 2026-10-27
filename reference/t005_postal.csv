@@ -1,0 +1,11 @@
+land1,length,numeric,pattern,note
+DE,5,1,,
+AT,4,1,,
+CH,4,1,,
+BE,4,1,,
+NL,,,"\d{4} ?[A-Z]{2}",1234 AB
+FR,5,1,,
+PL,,,"\d{2}-\d{3}",00-950
+LU,4,1,,
+DK,4,1,,
+IT,5,1,,
