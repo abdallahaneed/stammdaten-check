@@ -34,6 +34,10 @@ SCHEMAS = {
 
 OPTIONAL = {"knvk", "knbk", "mara", "makt", "activity"}
 
+# Columns used when present, filled with "" when an older extract lacks them.
+# TELF1 sits in LFA1, the email address comes from ADR6 like for customers.
+EXTRA_COLUMNS = {"lfa1": ["TELF1", "SMTP_ADDR"]}
+
 
 class ExtractError(Exception):
     pass
@@ -55,7 +59,7 @@ def load(folder):
         path = folder / f"{name}.csv"
         if not path.exists():
             if name in OPTIONAL:
-                tables[name] = pd.DataFrame(columns=columns)
+                tables[name] = pd.DataFrame(columns=columns + EXTRA_COLUMNS.get(name, []))
                 continue
             problems.append(f"{name}.csv is missing")
             continue
@@ -64,6 +68,9 @@ def load(folder):
         if missing:
             problems.append(f"{name}.csv lacks columns: {', '.join(missing)}")
             continue
+        for col in EXTRA_COLUMNS.get(name, []):
+            if col not in df.columns:
+                df[col] = ""
         tables[name] = df
     if problems:
         raise ExtractError("; ".join(problems))

@@ -8,7 +8,7 @@ One CSV per table. Column names are the SAP field names. Comma or semicolon, UTF
 | knb1.csv | KNB1 | KUNNR, BUKRS, AKONT, LOEVM | yes |
 | knbk.csv | KNBK | KUNNR, BANKS, BANKL, BANKN, BKONT | no |
 | knvk.csv | KNVK | PARNR, KUNNR, NAMEV, NAME1, ABTNR, TELF1 | no |
-| lfa1.csv | LFA1 | LIFNR, KTOKK, ANRED, NAME1, NAME2, STRAS, PSTLZ, ORT01, LAND1, SPRAS, STCEG, STCD1, KUNNR, LOEVM, SPERR, ERDAT | yes |
+| lfa1.csv | LFA1 + ADR6 | LIFNR, KTOKK, ANRED, NAME1, NAME2, STRAS, PSTLZ, ORT01, LAND1, SPRAS, STCEG, STCD1, KUNNR, LOEVM, SPERR, ERDAT, optional TELF1 and SMTP_ADDR | yes |
 | lfb1.csv | LFB1 | LIFNR, BUKRS, AKONT, ZTERM | yes |
 | lfbk.csv | LFBK | LIFNR, BANKS, BANKL, BANKN, BKONT, KOINH | yes |
 | tiban.csv | TIBAN | BANKS, BANKL, BANKN, BKONT, IBAN | yes |

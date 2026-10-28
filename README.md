@@ -111,8 +111,9 @@ The API is what the dashboard uses, and what other tools can call:
 | PATCH | /api/v1/findings/{findingId} | status, owner, comment, logged |
 | PATCH | /api/v1/findings | the same for up to 500 findings, all or nothing |
 | POST | /api/v1/partner-checks | check one new or changed partner: fields, duplicates, IBAN already in use |
+| GET | /api/v1/vendors/{vendorId} | vendor as on file: address, phone, email, bank accounts |
 
-The last one is the hook for onboarding: before a new vendor is created, a workflow sends the data here and gets back problems, likely duplicates and other partners that already use the same IBAN.
+The last two are the hooks for onboarding. Before a vendor is created or its bank details change, a workflow sends the data here and gets back problems, likely duplicates, other partners that already use the same IBAN, and the record on file. [vendor-guard](https://github.com/abdallahaneed/vendor-guard) does exactly that.
 
 Writes need the `X-API-Key` header once `STAMMDATEN_API_KEY` is set. Reads stay open, because the tool is meant to run on localhost or inside a company network. Uploads only take CSV files out of the zip, by file name, so a path inside the archive cannot write outside the run folder.
 

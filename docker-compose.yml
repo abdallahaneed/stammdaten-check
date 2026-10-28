@@ -1,0 +1,13 @@
+services:
+  stammdaten-check:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      # set a key before anyone else can reach the port
+      STAMMDATEN_API_KEY: ${STAMMDATEN_API_KEY:-}
+    volumes:
+      - stammdaten-data:/data
+
+volumes:
+  stammdaten-data:

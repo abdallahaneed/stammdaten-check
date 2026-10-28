@@ -18,7 +18,7 @@ from pathlib import Path
 
 from faker import Faker
 
-from .extracts import SCHEMAS
+from .extracts import EXTRA_COLUMNS, SCHEMAS
 from .validators import make_de_vat, make_iban
 
 CUTOVER = date(2026, 12, 31)
@@ -235,6 +235,7 @@ class Builder:
             "STCD1": "", "KUNNR": "", "LOEVM": "", "SPERR": "",
             "ERDAT": self.day(date(2008, 1, 1), date(2024, 12, 31)),
         }
+        row.update(self.vendor_contact(lifnr, name, cc))
         self.t["lfa1"].append(row)
         self.t["lfb1"].append({"LIFNR": lifnr, "BUKRS": COMPANY_CODE, "AKONT": "160000", "ZTERM": "ZB30"})
         key, acc, iban = self.bank(cc)
@@ -243,6 +244,20 @@ class Builder:
         self.t["tiban"].append({"BANKS": cc, "BANKL": key, "BANKN": acc, "BKONT": "", "IBAN": iban})
         self.activity("vendor", lifnr)
         return row
+
+    @staticmethod
+    def vendor_contact(lifnr, name, cc):
+        """Phone and invoice email for a vendor. Own random source per vendor,
+        so adding these fields does not change any other generated value."""
+        r = random.Random(f"contact-{lifnr}")
+        prefix = {"DE": "+49 228", "AT": "+43 1", "NL": "+31 20", "BE": "+32 2", "CH": "+41 44"}[cc]
+        slug = name.split()[0].lower()
+        for k, v in (("ä", "ae"), ("ö", "oe"), ("ü", "ue"), ("ß", "ss")):
+            slug = slug.replace(k, v)
+        slug = "".join(ch for ch in slug if ch.isalnum()) or "firma"
+        tld = {"DE": "de", "AT": "at", "NL": "nl", "BE": "be", "CH": "ch"}[cc]
+        return {"TELF1": f"{prefix} {r.randint(100000, 9999999)}",
+                "SMTP_ADDR": f"buchhaltung@{slug}-{lifnr[-3:]}.example.{tld}"}
 
     def build_materials(self):
         units = ["ST", "ST", "ST", "KAR", "PAL", "KG", "M", "ROL", "PAK"]
@@ -490,7 +505,6 @@ class Builder:
             self.label("R03", "customer", b["KUNNR"], "checksum")
 
     def plant_cvi(self):
-        customers = self.t["kna1"]
         # 20 clean linked pairs: customer and vendor with the same number
         for r in self.pick("kna1", 20, lambda r: r["KTOKD"] == "KUNA"):
             v = self.new_vendor(r["KUNNR"], cc="DE", name=r["NAME1"],
@@ -618,8 +632,9 @@ class Builder:
         out = Path(out)
         out.mkdir(parents=True, exist_ok=True)
         for name, cols in SCHEMAS.items():
+            cols = cols + EXTRA_COLUMNS.get(name, [])
             with open(out / f"{name}.csv", "w", newline="", encoding="utf-8") as fh:
-                w = csv.DictWriter(fh, fieldnames=cols)
+                w = csv.DictWriter(fh, fieldnames=cols, extrasaction="ignore")
                 w.writeheader()
                 w.writerows(self.t[name])
         with open(out / "labels.csv", "w", newline="", encoding="utf-8") as fh:
