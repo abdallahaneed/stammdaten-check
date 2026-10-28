@@ -4,7 +4,7 @@ services:
     ports:
       - "127.0.0.1:8000:8000"
     environment:
-      # set a key before anyone else can reach the port
+      # only reachable from this machine. Set a key before you open the port, see README
       STAMMDATEN_API_KEY: ${STAMMDATEN_API_KEY:-}
     volumes:
       - stammdaten-data:/data
